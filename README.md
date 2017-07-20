@@ -29,7 +29,11 @@ Checkout Component 3.0 requirements:
 
 ## Environment
 I implemented Checkout component using Spring boot and H2 database.
-Database schema is created on startup. You can log into database console using link:
+Database schema is created on startup and initialized with data declared in file:
+```
+data.sql
+```
+You can log into database console using link:
 ```
 localhost:9000/h2Console
 ```
