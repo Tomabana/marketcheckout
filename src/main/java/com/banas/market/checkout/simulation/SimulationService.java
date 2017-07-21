@@ -35,6 +35,7 @@ public class SimulationService {
         for (Checkout checkout : checkouts) {
             executorService.execute(new CheckoutRunner(checkout, basketsQueue, cashPaymentService));
         }
+        executorService.shutdown();
     }
 
     private ArrayBlockingQueue<Basket> createBasketsQueue(int numberOfBaskets, int maxNumberOfItemsInBasket) {
