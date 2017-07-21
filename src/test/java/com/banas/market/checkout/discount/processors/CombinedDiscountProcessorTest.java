@@ -16,23 +16,20 @@ import java.util.Map;
 public class CombinedDiscountProcessorTest {
 
     private Map<Item, Integer> items = new HashMap<>();
-    private DataGenerator dataGenerator = new DataGenerator();
     private CombinedDiscountProcessor combinedDiscountProcessor = new CombinedDiscountProcessor();
 
     @Before
     public void setUp() {
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A), 2);
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B), 3);
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C), 2);
+        this.items.put(DataGenerator.ITEM_A, 2);
+        this.items.put(DataGenerator.ITEM_B, 3);
+        this.items.put(DataGenerator.ITEM_C, 2);
     }
 
     @Test
     public void discountShouldApply() {
         CombinedDiscount combinedDiscount = new CombinedDiscount();
-        combinedDiscount.setItems(new HashSet<>(Arrays.asList(
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C))));
+        combinedDiscount.setItems(new HashSet<>(Arrays.asList(DataGenerator.ITEM_A, DataGenerator.ITEM_B,
+                DataGenerator.ITEM_C)));
 
         boolean canApply = combinedDiscountProcessor.checkIfDiscountCanApply(items, combinedDiscount);
 
@@ -42,11 +39,8 @@ public class CombinedDiscountProcessorTest {
     @Test
     public void discountShouldNotApply() {
         CombinedDiscount combinedDiscount = new CombinedDiscount();
-        combinedDiscount.setItems(new HashSet<>(Arrays.asList(
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_D))));
+        combinedDiscount.setItems(new HashSet<>(Arrays.asList(DataGenerator.ITEM_A, DataGenerator
+                .ITEM_B, DataGenerator.ITEM_C, DataGenerator.ITEM_D)));
 
         boolean canApply = combinedDiscountProcessor.checkIfDiscountCanApply(items, combinedDiscount);
 
@@ -56,33 +50,32 @@ public class CombinedDiscountProcessorTest {
     @Test
     public void removeItemsUsedForDiscount() {
         CombinedDiscount combinedDiscount = new CombinedDiscount();
-        combinedDiscount.setItems(new HashSet<>(Arrays.asList(
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B),
-                dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C))));
+        combinedDiscount.setItems(new HashSet<>(Arrays.asList(DataGenerator.ITEM_A, DataGenerator.ITEM_B,
+                DataGenerator.ITEM_C)));
         Map<Item, Integer> basketCopy = new HashMap<>(items);
 
         combinedDiscountProcessor.removeItemsUsedForDiscount(basketCopy, combinedDiscount);
 
-        Assert.assertTrue("PRODUCT_A should be removed",
-                basketCopy.get(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A)) == 1);
-        Assert.assertTrue("PRODUCT_B should be removed",
-                basketCopy.get(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B)) == 2);
-        Assert.assertTrue("PRODUCT_C should be removed",
-                basketCopy.get(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C)) == 1);
+        Assert.assertTrue("ITEM_A should be removed",
+                basketCopy.get(DataGenerator.ITEM_A) == 1);
+        Assert.assertTrue("ITEM_B should be removed",
+                basketCopy.get(DataGenerator.ITEM_B) == 2);
+        Assert.assertTrue("ITEM_C should be removed",
+                basketCopy.get(DataGenerator.ITEM_C) == 1);
     }
 
     @Test
     public void calculateTotalDiscount() {
+        BigDecimal discountAmount = BigDecimal.valueOf(50);
         CombinedDiscount combinedDiscount = new CombinedDiscount();
-        combinedDiscount.setDiscount(BigDecimal.valueOf(50));
+        combinedDiscount.setDiscount(discountAmount);
         Receipt receipt = new Receipt();
         receipt.getDiscounts().getAppliedCombinedDiscounts().add(combinedDiscount);
 
         BigDecimal totalDiscount = combinedDiscountProcessor.calculateTotalDiscount(receipt.getDiscounts());
 
         Assert.assertTrue("Discount should be included in total discount",
-                totalDiscount.compareTo(BigDecimal.valueOf(50)) == 0);
+                totalDiscount.compareTo(discountAmount) == 0);
     }
 
 }

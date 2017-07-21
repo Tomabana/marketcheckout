@@ -5,106 +5,88 @@ import com.banas.market.checkout.discount.entities.QuantityDiscount;
 import com.banas.market.checkout.inventory.Item;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 class DataGenerator {
 
-    public enum ItemName {
-        PRODUCT_A, PRODUCT_B, PRODUCT_C, PRODUCT_D
+    private enum ItemData {
+        ITEM_A(1, "ItemA", BigDecimal.valueOf(50), 3, BigDecimal.valueOf(100)),
+        ITEM_B(2, "ItemB", BigDecimal.valueOf(100), 2, BigDecimal.valueOf(175)),
+        ITEM_C(3, "ItemC", BigDecimal.valueOf(40), 4, BigDecimal.valueOf(140)),
+        ITEM_D(4, "ItemD", BigDecimal.valueOf(25), 2, BigDecimal.valueOf(45));
+
+        private long id;
+        private String name;
+        private BigDecimal price;
+        private int quantityDiscountUnits;
+        private BigDecimal quantityDiscountPrice;
+
+        ItemData(long id, String name, BigDecimal price, int quantityDiscountUnits, BigDecimal
+                quantityDiscountPrice) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.quantityDiscountUnits = quantityDiscountUnits;
+            this.quantityDiscountPrice = quantityDiscountPrice;
+        }
     }
 
-    private Map<ItemName, Item> itemsMap = new HashMap<>();
+    private enum CombinedDiscountData {
+        ABCD(Arrays.asList(ITEM_A, ITEM_B, ITEM_C, ITEM_D), BigDecimal.valueOf(100)),
+        AB(Arrays.asList(ITEM_A, ITEM_B), BigDecimal.valueOf(20)),
+        AC(Arrays.asList(ITEM_A, ITEM_C), BigDecimal.valueOf(15));
 
-    DataGenerator() {
-        generateItemsWithDiscounts();
+        private Set<Item> items;
+        private BigDecimal discount;
+
+        CombinedDiscountData(List<Item> items, BigDecimal discount) {
+            this.items = new HashSet<>(items);
+            this.discount = discount;
+        }
     }
 
-    Item getItem(ItemName itemName) {
-        return itemsMap.get(itemName);
+
+    static final Item ITEM_A = generateItem(ItemData.ITEM_A);
+    static final Item ITEM_B = generateItem(ItemData.ITEM_B);
+    static final Item ITEM_C = generateItem(ItemData.ITEM_C);
+    static final Item ITEM_D = generateItem(ItemData.ITEM_D);
+
+    static {
+        addDiscountsToItems();
     }
 
-    private void generateItemsWithDiscounts() {
-        itemsMap.put(ItemName.PRODUCT_A, generateItemA());
-        itemsMap.put(ItemName.PRODUCT_B, generateItemB());
-        itemsMap.put(ItemName.PRODUCT_C, generateItemC());
-        itemsMap.put(ItemName.PRODUCT_D, generateItemD());
 
-        Set<Item> combinedDiscountABCD = new HashSet<>(Arrays.asList(itemsMap.get(ItemName.PRODUCT_A),
-                itemsMap.get(ItemName.PRODUCT_B), itemsMap.get(ItemName.PRODUCT_C),
-                itemsMap.get(ItemName.PRODUCT_D)));
-        Set<Item> combinedDiscountAB = new HashSet<>(Arrays.asList(itemsMap.get(ItemName.PRODUCT_A),
-                itemsMap.get(ItemName.PRODUCT_B)));
-        Set<Item> combinedDiscountAC = new HashSet<>(Arrays.asList(itemsMap.get(ItemName.PRODUCT_A),
-                itemsMap.get(ItemName.PRODUCT_C)));
-
-        addCombinedDiscountToItems(combinedDiscountABCD, BigDecimal.valueOf(100));
-        addCombinedDiscountToItems(combinedDiscountAB, BigDecimal.valueOf(20));
-        addCombinedDiscountToItems(combinedDiscountAC, BigDecimal.valueOf(15));
-
+    private static void addDiscountsToItems() {
+        Stream.of(CombinedDiscountData.values())
+                .forEach(combinedDiscountData -> addCombinedDiscountToItems(combinedDiscountData));
     }
 
-    private Item generateItemA() {
+    private static Item generateItem(ItemData itemData) {
         Item item = new Item();
-        item.setId(1L);
-        item.setName("ItemA");
-        item.setPrice(BigDecimal.valueOf(50));
+        item.setId(itemData.id);
+        item.setName(itemData.name);
+        item.setPrice(itemData.price);
         item.setQuantityDiscounts(new HashSet<>());
         item.setCombinedDiscounts(new HashSet<>());
-        item.getQuantityDiscounts().add(generateQuantityDiscount(item, 3, BigDecimal.valueOf(100)));
 
-        return item;
-    }
-
-    private Item generateItemB() {
-        Item item = new Item();
-        item.setId(2L);
-        item.setName("ItemB");
-        item.setPrice(BigDecimal.valueOf(100));
-        item.setQuantityDiscounts(new HashSet<>());
-        item.setCombinedDiscounts(new HashSet<>());
-        item.getQuantityDiscounts().add(generateQuantityDiscount(item, 2, BigDecimal.valueOf(175)));
-
-        return item;
-    }
-
-    private Item generateItemC() {
-        Item item = new Item();
-        item.setId(3L);
-        item.setName("ItemC");
-        item.setPrice(BigDecimal.valueOf(40));
-        item.setQuantityDiscounts(new HashSet<>());
-        item.setCombinedDiscounts(new HashSet<>());
-        item.getQuantityDiscounts().add(generateQuantityDiscount(item, 4, BigDecimal.valueOf(140)));
-
-        return item;
-    }
-
-    private Item generateItemD() {
-        Item item = new Item();
-        item.setId(4L);
-        item.setName("ItemD");
-        item.setPrice(BigDecimal.valueOf(25));
-        item.setQuantityDiscounts(new HashSet<>());
-        item.setCombinedDiscounts(new HashSet<>());
-        item.getQuantityDiscounts().add(generateQuantityDiscount(item, 2, BigDecimal.valueOf(45)));
-
-        return item;
-    }
-
-    private QuantityDiscount generateQuantityDiscount(Item item, Integer quantity, BigDecimal price) {
         QuantityDiscount quantityDiscount = new QuantityDiscount();
         quantityDiscount.setItem(item);
-        quantityDiscount.setQuantity(quantity);
-        quantityDiscount.setPrice(price);
+        quantityDiscount.setQuantity(itemData.quantityDiscountUnits);
+        quantityDiscount.setPrice(itemData.quantityDiscountPrice);
 
-        return quantityDiscount;
+        item.getQuantityDiscounts().add(quantityDiscount);
+
+        return item;
     }
 
-    private void addCombinedDiscountToItems(Set<Item> items, BigDecimal quantity) {
+    private static void addCombinedDiscountToItems(CombinedDiscountData combinedDiscountData) {
         CombinedDiscount combinedDiscount = new CombinedDiscount();
-        combinedDiscount.setItems(items);
-        combinedDiscount.setDiscount(quantity);
-        items.stream().forEach(item -> item.getCombinedDiscounts().add(combinedDiscount));
+        combinedDiscount.setItems(combinedDiscountData.items);
+        combinedDiscount.setDiscount(combinedDiscountData.discount);
+        combinedDiscountData.items.stream().forEach(item -> item.getCombinedDiscounts().add(combinedDiscount));
     }
-
 }

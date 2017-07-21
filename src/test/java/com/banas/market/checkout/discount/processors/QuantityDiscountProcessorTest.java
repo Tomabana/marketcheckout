@@ -14,22 +14,19 @@ import java.util.Map;
 public class QuantityDiscountProcessorTest {
 
     private Map<Item, Integer> items = new HashMap<>();
-    private DataGenerator dataGenerator = new DataGenerator();
     private QuantityDiscountProcessor quantityDiscountProcessor = new QuantityDiscountProcessor();
 
     @Before
     public void setUp() {
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A), 4);
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B), 3);
-        this.items.put(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C), 1);
+        this.items.put(DataGenerator.ITEM_A, 4);
+        this.items.put(DataGenerator.ITEM_B, 3);
+        this.items.put(DataGenerator.ITEM_C, 1);
     }
 
     @Test
     public void discountShouldApply() {
-        Item item = dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A);
-
         QuantityDiscount quantityDiscount = new QuantityDiscount();
-        quantityDiscount.setItem(item);
+        quantityDiscount.setItem(DataGenerator.ITEM_A);
         quantityDiscount.setQuantity(3);
 
         Assert.assertTrue("Discount should be applied", quantityDiscountProcessor.checkIfDiscountCanApply(items,
@@ -38,10 +35,8 @@ public class QuantityDiscountProcessorTest {
 
     @Test
     public void discountShouldNotApply() {
-        Item item = dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A);
-
         QuantityDiscount quantityDiscount = new QuantityDiscount();
-        quantityDiscount.setItem(item);
+        quantityDiscount.setItem(DataGenerator.ITEM_A);
         quantityDiscount.setQuantity(2);
 
         Assert.assertTrue("Discount shouldn't be applied", quantityDiscountProcessor.checkIfDiscountCanApply(items,
@@ -50,29 +45,27 @@ public class QuantityDiscountProcessorTest {
 
     @Test
     public void removeItemsUsedForDiscount() {
-        Item item = dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A);
-
         QuantityDiscount quantityDiscount = new QuantityDiscount();
-        quantityDiscount.setItem(item);
+        quantityDiscount.setItem(DataGenerator.ITEM_A);
         quantityDiscount.setQuantity(3);
 
         Map<Item, Integer> basketCopy = new HashMap<>(items);
         quantityDiscountProcessor.removeItemsUsedForDiscount(basketCopy, quantityDiscount);
-        Assert.assertTrue("Items should be removed", basketCopy.get(item) == 1);
+
+        Assert.assertTrue("Items should be removed", basketCopy.get(DataGenerator.ITEM_A) == 1);
     }
 
     @Test
     public void calculateTotalDiscount() {
-        Item item = dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A);
-
         QuantityDiscount quantityDiscount = new QuantityDiscount();
-        quantityDiscount.setItem(item);
+        quantityDiscount.setItem(DataGenerator.ITEM_A);
         quantityDiscount.setQuantity(3);
         quantityDiscount.setPrice(BigDecimal.valueOf(100));
-
         Receipt receipt = new Receipt();
         receipt.getDiscounts().getAppliedQuantityDiscounts().add(quantityDiscount);
+
         BigDecimal totalDiscount = quantityDiscountProcessor.calculateTotalDiscount(receipt.getDiscounts());
+
         Assert.assertTrue("Discount should be included in total discount",
                 totalDiscount.compareTo(BigDecimal.valueOf(50)) == 0);
     }

@@ -13,6 +13,8 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -21,7 +23,6 @@ import static org.mockito.Mockito.when;
 public class DiscountProcessorTest {
 
     private Receipt receipt = new Receipt();
-    private DataGenerator dataGenerator = new DataGenerator();
 
     @Spy
     @SuppressWarnings("unused")
@@ -43,55 +44,38 @@ public class DiscountProcessorTest {
 
     @Before
     public void setUp() {
-        when(itemService.getItemWithDiscounts(1L))
-                .thenReturn(Optional.of(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A)));
-        when(itemService.getItemWithDiscounts(2L))
-                .thenReturn(Optional.of(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B)));
-        when(itemService.getItemWithDiscounts(3L))
-                .thenReturn(Optional.of(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C)));
-        when(itemService.getItemWithDiscounts(4L))
-                .thenReturn(Optional.of(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_D)));
+        when(itemService.getItemWithDiscounts(1L)).thenReturn(Optional.of(DataGenerator.ITEM_A));
+        when(itemService.getItemWithDiscounts(2L)).thenReturn(Optional.of(DataGenerator.ITEM_B));
+        when(itemService.getItemWithDiscounts(3L)).thenReturn(Optional.of(DataGenerator.ITEM_C));
+        when(itemService.getItemWithDiscounts(4L)).thenReturn(Optional.of(DataGenerator.ITEM_D));
     }
 
 
     @Test
     public void applyBestPossibleDiscountsFirstScenario() {
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_C));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_D));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-
+        List<Item> items = Arrays.asList(DataGenerator.ITEM_A, DataGenerator.ITEM_A, DataGenerator.ITEM_A,
+                DataGenerator.ITEM_B, DataGenerator.ITEM_A, DataGenerator.ITEM_C, DataGenerator.ITEM_D,
+                DataGenerator.ITEM_A, DataGenerator.ITEM_A, DataGenerator.ITEM_A);
+        items.stream().forEach(item -> receipt = addItemAndCalculateDiscount(item));
 
         validateAmounts(receipt, BigDecimal.valueOf(515), BigDecimal.valueOf(200));
     }
 
     @Test
     public void applyBestPossibleDiscountsSecondScenario() {
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
+        List<Item> items = Arrays.asList(DataGenerator.ITEM_B, DataGenerator.ITEM_B, DataGenerator.ITEM_A,
+                DataGenerator.ITEM_A);
 
+        items.stream().forEach(item -> receipt = addItemAndCalculateDiscount(item));
         validateAmounts(receipt, BigDecimal.valueOf(300), BigDecimal.valueOf(40));
     }
 
     @Test
     public void applyBestPossibleDiscountsWithDefaultPercentageDiscount() {
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_A));
-        receipt = addItemAndCalculateDiscount(dataGenerator.getItem(DataGenerator.ItemName.PRODUCT_B));
+        List<Item> items = Arrays.asList(DataGenerator.ITEM_B, DataGenerator.ITEM_A, DataGenerator.ITEM_B,
+                DataGenerator.ITEM_B, DataGenerator.ITEM_B, DataGenerator.ITEM_B, DataGenerator.ITEM_B,
+                DataGenerator.ITEM_A, DataGenerator.ITEM_B);
+        items.stream().forEach(item -> receipt = addItemAndCalculateDiscount(item));
 
         validateAmounts(receipt, BigDecimal.valueOf(800), BigDecimal.valueOf(175));
     }
