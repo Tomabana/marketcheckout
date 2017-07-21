@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ArrayBlockingQueue;
 
 class CheckoutRunner implements Runnable {
-    private static Logger LOGGER = LoggerFactory.getLogger(CheckoutRunner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckoutRunner.class);
 
     private IPayment payment;
     private Checkout checkout;

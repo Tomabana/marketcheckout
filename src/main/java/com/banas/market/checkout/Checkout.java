@@ -21,7 +21,7 @@ import java.util.Optional;
 @Scope("prototype")
 public class Checkout implements ICheckout {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Checkout.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Checkout.class);
 
     private Receipt receipt = new Receipt();
     private boolean paymentDone = false;

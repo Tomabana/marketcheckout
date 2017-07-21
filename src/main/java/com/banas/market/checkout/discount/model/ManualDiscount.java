@@ -30,9 +30,9 @@ public class ManualDiscount {
     public String toString() {
         StringBuilder result = new StringBuilder("ManualDiscount {");
         if (amountDiscount != null) {
-            result.append("amountDiscount=" + amountDiscount);
+            result.append("amountDiscount=").append(amountDiscount);
         } else if (percentageDiscount != null) {
-            result.append("percentageDiscount=" + percentageDiscount);
+            result.append("percentageDiscount=").append(percentageDiscount);
         }
         result.append("}");
         return result.toString();

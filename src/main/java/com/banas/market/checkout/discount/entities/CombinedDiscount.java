@@ -66,7 +66,7 @@ public class CombinedDiscount {
 
     @Override
     public String toString() {
-        String items = getItems().stream().map(item -> item.getName()).reduce((acc, actual) -> acc + actual).get();
+        String items = getItems().stream().map(item -> item.getName()).reduce((acc, actual) -> acc + " " + actual).get();
         return "Combined discount{" +
                 "discount=" + discount +
                 ", items=" + items +

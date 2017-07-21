@@ -139,14 +139,14 @@ public class DiscountProcessor {
     }
 
     private BigDecimal calculateTotalDiscount(Discounts discounts) {
-        BigDecimal totalDiscount = new BigDecimal(0);
+        BigDecimal totalDiscount = BigDecimal.ZERO;
         totalDiscount = totalDiscount.add(quantityDiscountProcessor.calculateTotalDiscount(discounts));
         totalDiscount = totalDiscount.add(combinedDiscountProcessor.calculateTotalDiscount(discounts));
         return totalDiscount;
     }
 
     private BigDecimal calculateTotalPrice(Map<Item, Integer> items) {
-        BigDecimal totalPrice = new BigDecimal(0);
+        BigDecimal totalPrice = BigDecimal.ZERO;
         for (Map.Entry<Item, Integer> entry : items.entrySet()) {
             if (entry.getValue() > 0) {
                 totalPrice = totalPrice.add(entry.getKey().getPrice().multiply(BigDecimal.valueOf(entry.getValue())));

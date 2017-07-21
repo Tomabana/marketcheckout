@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/simulation")
 public class SimulationController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(SimulationController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationController.class);
 
     @Autowired
     private SimulationService simulationService;
@@ -19,8 +19,8 @@ public class SimulationController {
     @RequestMapping("/{numberOfBaskets}/{maxNumberOfItemsInBasket}")
     public String runSimulation(@PathVariable(value = "numberOfBaskets") int numberOfBaskets,
                                 @PathVariable(value = "maxNumberOfItemsInBasket") int maxNumberOfItemsInBasket) {
-        LOGGER.info("Received request. Running simulation with param: numberOfBaskets = {}, " +
-                "maxNumberOfItemsInBasket = {} .", numberOfBaskets, maxNumberOfItemsInBasket);
+        LOGGER.info("Running simulation with param: numberOfBaskets = {}, maxNumberOfItemsInBasket = {} .",
+                numberOfBaskets, maxNumberOfItemsInBasket);
         simulationService.runSimulation(numberOfBaskets, maxNumberOfItemsInBasket);
         return "success";
     }

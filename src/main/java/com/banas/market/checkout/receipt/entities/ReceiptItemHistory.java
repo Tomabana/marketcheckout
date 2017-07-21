@@ -37,7 +37,11 @@ public class ReceiptItemHistory {
         return id;
     }
 
-    public BigDecimal getPrice() {
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
