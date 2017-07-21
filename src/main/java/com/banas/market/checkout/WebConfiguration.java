@@ -1,13 +1,13 @@
 package com.banas.market.checkout;
 
 import com.banas.market.checkout.simulation.SimulationService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.context.annotation.Scope;
 
 @SpringBootApplication
 public class WebConfiguration {
@@ -27,6 +27,7 @@ public class WebConfiguration {
     }
 
     @Bean
+    @Scope("prototype")
     public Checkout checkout() {
         return new Checkout();
     }
