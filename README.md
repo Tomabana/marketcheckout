@@ -54,14 +54,6 @@ You can also invoke simulation using REST API:
 localhost:9000/simulation/{numberOfBaskets}/{maxNumberOfItemsInBasket}
 ```
 
-## IDE configuration
-
-I used [JPA Static Metamodel Generator](https://docs.jboss.org/hibernate/orm/5.0/topical/html/metamodelgen/MetamodelGenerator.html) so you have to add in your IDE generated classes to the 
-classpath. In Intellij you just have to mark as a "Generated sources root" directory:
-```
-target\generated-sources\annotations
-```
-
 ## Pitest mutations and code coverage 
 I used  [pitest](http://pitest.org) for mutation testing. You can execute
 ```
