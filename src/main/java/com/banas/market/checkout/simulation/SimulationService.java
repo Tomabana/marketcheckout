@@ -2,7 +2,7 @@ package com.banas.market.checkout.simulation;
 
 import com.banas.market.checkout.Checkout;
 import com.banas.market.checkout.inventory.Item;
-import com.banas.market.checkout.inventory.ItemService;
+import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.payment.CashPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class SimulationService {
     private CashPaymentService cashPaymentService;
 
     @Autowired
-    private ItemService itemService;
+    private ItemRepository itemRepository;
 
     @Resource(name = "checkoutsList")
     private List<Checkout> checkouts;
@@ -39,7 +39,7 @@ public class SimulationService {
     }
 
     private ArrayBlockingQueue<Basket> createBasketsQueue(int numberOfBaskets, int maxNumberOfItemsInBasket) {
-        List<Item> allAvailableItems = itemService.getAllItems();
+        List<Item> allAvailableItems = itemRepository.findAll();
         Assert.notEmpty(allAvailableItems, "No items in database. Simulation cannot be run.");
         ArrayBlockingQueue<Basket> basketsQueue = new ArrayBlockingQueue<>(numberOfBaskets);
         for (int i = 0; i < numberOfBaskets; i++) {

@@ -5,7 +5,7 @@ import com.banas.market.checkout.discount.entities.QuantityDiscount;
 import com.banas.market.checkout.discount.model.Discounts;
 import com.banas.market.checkout.discount.model.ManualDiscount;
 import com.banas.market.checkout.inventory.Item;
-import com.banas.market.checkout.inventory.ItemService;
+import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 @Service
@@ -25,7 +24,7 @@ public class DiscountProcessor {
     private static final ManualDiscount PERCENTAGE_DISCOUNT = new ManualDiscount(0.1d);
 
     @Autowired
-    private ItemService itemService;
+    private ItemRepository itemRepository;
 
     @Autowired
     private ManualDiscountProcessor manualDiscountProcessor;
@@ -50,11 +49,11 @@ public class DiscountProcessor {
     private void addNewPossibleDiscounts(Receipt receipt) {
         //If item of particular type (lastAddedItem type) is added first time add new possible discounts
         if (receipt.getItems().get(receipt.getLastAddedItem()) == 1) {
-            Optional<Item> itemWithDiscounts = itemService.getItemWithDiscounts(receipt.getLastAddedItem().getId());
-            if (itemWithDiscounts.isPresent()) {
+            Item itemWithDiscounts = itemRepository.findByIdWithDiscounts(receipt.getLastAddedItem().getId());
+            if (itemWithDiscounts != null) {
                 receipt.getDiscounts().getPossibleQuantityDiscounts()
-                        .addAll(itemWithDiscounts.get().getQuantityDiscounts());
-                for (CombinedDiscount combinedDiscount : itemWithDiscounts.get().getCombinedDiscounts()) {
+                        .addAll(itemWithDiscounts.getQuantityDiscounts());
+                for (CombinedDiscount combinedDiscount : itemWithDiscounts.getCombinedDiscounts()) {
                     if (!receipt.getDiscounts().getAppliedQuantityDiscounts().contains(combinedDiscount)
                             && combinedDiscountProcessor.checkIfDiscountCanApply(receipt.getItems(), combinedDiscount)) {
                         receipt.getDiscounts().getPossibleCombinedDiscounts().add(combinedDiscount);

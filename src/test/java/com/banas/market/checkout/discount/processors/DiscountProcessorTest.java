@@ -1,7 +1,7 @@
 package com.banas.market.checkout.discount.processors;
 
 import com.banas.market.checkout.inventory.Item;
-import com.banas.market.checkout.inventory.ItemService;
+import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -37,17 +36,17 @@ public class DiscountProcessorTest {
     private QuantityDiscountProcessor quantityDiscountProcessor = new QuantityDiscountProcessor();
 
     @Mock
-    private ItemService itemService;
+    private ItemRepository itemRepository;
 
     @InjectMocks
     private DiscountProcessor discountProcessor = new DiscountProcessor();
 
     @Before
     public void setUp() {
-        when(itemService.getItemWithDiscounts(1L)).thenReturn(Optional.of(DataGenerator.ITEM_A));
-        when(itemService.getItemWithDiscounts(2L)).thenReturn(Optional.of(DataGenerator.ITEM_B));
-        when(itemService.getItemWithDiscounts(3L)).thenReturn(Optional.of(DataGenerator.ITEM_C));
-        when(itemService.getItemWithDiscounts(4L)).thenReturn(Optional.of(DataGenerator.ITEM_D));
+        when(itemRepository.findByIdWithDiscounts(1L)).thenReturn(DataGenerator.ITEM_A);
+        when(itemRepository.findByIdWithDiscounts(2L)).thenReturn(DataGenerator.ITEM_B);
+        when(itemRepository.findByIdWithDiscounts(3L)).thenReturn(DataGenerator.ITEM_C);
+        when(itemRepository.findByIdWithDiscounts(4L)).thenReturn(DataGenerator.ITEM_D);
     }
 
 
