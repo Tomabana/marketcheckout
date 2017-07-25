@@ -6,6 +6,7 @@ import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
 import com.banas.market.checkout.receipt.ReceiptHistoryRepository;
+import com.banas.market.checkout.receipt.ReceiptPrinter;
 import com.banas.market.checkout.receipt.entities.ReceiptHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,9 @@ public class Checkout {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private ReceiptPrinter receiptPrinter;
 
     public void startNewReceipt() {
         LOGGER.info("Starting new receipt");
@@ -71,7 +75,7 @@ public class Checkout {
     public Receipt printReceipt() {
         if (paymentDone) {
             LOGGER.info("Printing receipt.");
-            LOGGER.info(receipt.toString());
+            receiptPrinter.print(receipt);
             receiptHistoryRepository.save(new ReceiptHistory(receipt));
         } else {
             LOGGER.warn("The receipt is not paid. Client has to pay receipt before printing it out.");
