@@ -4,7 +4,6 @@ import com.banas.market.checkout.discount.DiscountService;
 import com.banas.market.checkout.discount.model.ManualDiscount;
 import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
-import com.banas.market.checkout.payment.IPayment;
 import com.banas.market.checkout.receipt.Receipt;
 import com.banas.market.checkout.receipt.ReceiptHistoryRepository;
 import com.banas.market.checkout.receipt.entities.ReceiptHistory;
@@ -65,8 +64,7 @@ public class Checkout {
         receipt = discountService.applyBestPossibleDiscounts(receipt);
     }
 
-    public void pay(IPayment payment) {
-        payment.pay(receipt);
+    public void pay() {
         paymentDone = true;
     }
 

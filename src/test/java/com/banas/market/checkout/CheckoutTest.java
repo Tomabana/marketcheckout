@@ -4,7 +4,6 @@ import com.banas.market.checkout.discount.DiscountService;
 import com.banas.market.checkout.discount.model.ManualDiscount;
 import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
-import com.banas.market.checkout.payment.CashPaymentService;
 import com.banas.market.checkout.receipt.Receipt;
 import com.banas.market.checkout.receipt.ReceiptHistoryRepository;
 import com.banas.market.checkout.receipt.entities.ReceiptHistory;
@@ -93,7 +92,7 @@ public class CheckoutTest {
 
         verify(receiptHistoryRepository, times(0)).save(any(ReceiptHistory.class));
 
-        checkout.pay(new CashPaymentService());
+        checkout.pay();
         checkout.printReceipt();
 
         verify(receiptHistoryRepository, times(1)).save(any(ReceiptHistory.class));

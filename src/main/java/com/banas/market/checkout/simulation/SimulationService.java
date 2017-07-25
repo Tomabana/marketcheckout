@@ -3,7 +3,6 @@ package com.banas.market.checkout.simulation;
 import com.banas.market.checkout.Checkout;
 import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
-import com.banas.market.checkout.payment.CashPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SimulationService {
 
     @Autowired
-    private CashPaymentService cashPaymentService;
-
-    @Autowired
     private ItemRepository itemRepository;
 
     @Resource(name = "checkoutsList")
@@ -33,7 +29,7 @@ public class SimulationService {
         ArrayBlockingQueue<Basket> basketsQueue = createBasketsQueue(numberOfBaskets, maxNumberOfItemsInBasket);
         ExecutorService executorService = Executors.newFixedThreadPool(checkouts.size());
         for (Checkout checkout : checkouts) {
-            executorService.execute(new CheckoutRunner(checkout, basketsQueue, cashPaymentService));
+            executorService.execute(new CheckoutRunner(checkout, basketsQueue));
         }
         executorService.shutdown();
     }
