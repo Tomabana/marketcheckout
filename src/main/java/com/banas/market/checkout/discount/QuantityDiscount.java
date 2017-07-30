@@ -1,9 +1,11 @@
-package com.banas.market.checkout.discount.entities;
+package com.banas.market.checkout.discount;
 
 import com.banas.market.checkout.inventory.Item;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Entity
 @Table(name = "QUANTITY_DISCOUNT")
@@ -13,6 +15,7 @@ public class QuantityDiscount {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
@@ -23,32 +26,17 @@ public class QuantityDiscount {
     @Column(name = "PRICE")
     private BigDecimal price;
 
-    public Long getId() {
-        return id;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
+    public BigDecimal getDiscount() {
+        BigDecimal priceWithoutDiscount = item.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return priceWithoutDiscount.subtract(price);
     }
 
     public Integer getQuantity() {
-        return quantity;
+        return new Integer(quantity);
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    boolean checkIfDiscountCanApply(Map<Item, Integer> itemsInBasket) {
+        return itemsInBasket.get(item) != null && itemsInBasket.get(item) >= quantity;
     }
 
     @Override

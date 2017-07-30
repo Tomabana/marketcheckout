@@ -31,7 +31,7 @@ class CheckoutRunner implements Runnable {
     private void run(Basket basket) {
         checkout.startNewReceipt();
         for (Item item : basket.getItems()) {
-            checkout.scanItem(item.getBarcode());
+            checkout.addItem(item);
         }
         checkout.pay();
         checkout.printReceipt();

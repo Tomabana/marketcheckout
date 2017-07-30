@@ -1,8 +1,9 @@
-package com.banas.market.checkout.discount.model;
+package com.banas.market.checkout.discount;
 
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class ManualDiscount {
     private BigDecimal amountDiscount;
@@ -18,12 +19,14 @@ public class ManualDiscount {
         this.percentageDiscount = percentageDiscount;
     }
 
-    public BigDecimal getAmountDiscount() {
-        return amountDiscount;
-    }
-
-    public Double getPercentageDiscount() {
-        return percentageDiscount;
+    public BigDecimal getDiscount(BigDecimal basketTotalPrice) {
+        BigDecimal discount = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        if (percentageDiscount != null) {
+            discount = discount.add(basketTotalPrice.multiply(BigDecimal.valueOf(percentageDiscount)));
+        } else if (amountDiscount != null) {
+            discount = discount.add(amountDiscount);
+        }
+        return discount;
     }
 
     @Override

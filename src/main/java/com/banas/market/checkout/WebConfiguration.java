@@ -32,4 +32,5 @@ public class WebConfiguration {
     public Checkout checkout() {
         return new Checkout();
     }
+
 }

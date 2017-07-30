@@ -1,13 +1,11 @@
 package com.banas.market.checkout;
 
-import com.banas.market.checkout.discount.DiscountService;
-import com.banas.market.checkout.discount.model.ManualDiscount;
+import com.banas.market.checkout.discount.ManualDiscount;
 import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
-import com.banas.market.checkout.receipt.ReceiptHistoryRepository;
-import com.banas.market.checkout.receipt.ReceiptPrinter;
-import com.banas.market.checkout.receipt.entities.ReceiptHistory;
+import com.banas.market.checkout.receipt.ReceiptFactory;
+import com.banas.market.checkout.receipt.ReceiptRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,35 +13,34 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Component
 @Service
 @Scope("prototype")
 public class Checkout {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Checkout.class);
-
-    private Receipt receipt = new Receipt();
     private boolean paymentDone = false;
+    private Receipt receipt;
 
     public Checkout() {
         LOGGER.info("Creating new checkout.");
     }
 
     @Autowired
-    private DiscountService discountService;
-
-    @Autowired
-    private ReceiptHistoryRepository receiptHistoryRepository;
+    private ReceiptRepository receiptRepository;
 
     @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
-    private ReceiptPrinter receiptPrinter;
+    private ReceiptFactory receiptFactory;
 
+    @PostConstruct
     public void startNewReceipt() {
         LOGGER.info("Starting new receipt");
-        receipt = new Receipt();
+        receipt = receiptFactory.createReceipt();
     }
 
     public Item scanItem(String barcode) {
@@ -60,12 +57,10 @@ public class Checkout {
     public void addItem(Item item) {
         LOGGER.info("Adding item to receipt");
         receipt.addItem(item);
-        receipt = discountService.applyBestPossibleDiscounts(receipt);
     }
 
     public void addManualDiscount(ManualDiscount manualDiscount) {
-        receipt.getDiscounts().getAppliedManualDiscounts().add(manualDiscount);
-        receipt = discountService.applyBestPossibleDiscounts(receipt);
+        receipt.addManualDiscount(manualDiscount);
     }
 
     public void pay() {
@@ -75,8 +70,8 @@ public class Checkout {
     public Receipt printReceipt() {
         if (paymentDone) {
             LOGGER.info("Printing receipt.");
-            receiptPrinter.print(receipt);
-            receiptHistoryRepository.save(new ReceiptHistory(receipt));
+            receipt.print();
+            receiptRepository.save(receipt);
         } else {
             LOGGER.warn("The receipt is not paid. Client has to pay receipt before printing it out.");
         }
