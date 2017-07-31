@@ -2,7 +2,6 @@ package com.banas.market.checkout;
 
 import com.banas.market.checkout.discount.ManualDiscount;
 import com.banas.market.checkout.inventory.Item;
-import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
 import com.banas.market.checkout.receipt.ReceiptFactory;
 import com.banas.market.checkout.receipt.ReceiptRepository;
@@ -32,26 +31,12 @@ public class Checkout {
     private ReceiptRepository receiptRepository;
 
     @Autowired
-    private ItemRepository itemRepository;
-
-    @Autowired
     private ReceiptFactory receiptFactory;
 
     @PostConstruct
     public void startNewReceipt() {
         LOGGER.info("Starting new receipt");
         receipt = receiptFactory.createReceipt();
-    }
-
-    public Item scanItem(String barcode) {
-        LOGGER.info("Scanning item with barCode = {}", barcode);
-        Item item = itemRepository.findByBarcode(barcode);
-        if (item != null) {
-            addItem(item);
-        } else {
-            LOGGER.warn("Item with barcode = {} not found", barcode);
-        }
-        return null;
     }
 
     public void addItem(Item item) {
