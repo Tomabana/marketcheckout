@@ -25,5 +25,6 @@ class CombinedDiscountSpec extends Specification {
         new HashMap<>()          | false
         [(itemA): 1, (itemB): 2] | true
         [(itemC): 1, (itemB): 2] | false
+        [(itemA): 0, (itemB): 2] | false
     }
 }
