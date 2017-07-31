@@ -1,7 +1,5 @@
 package com.banas.market.checkout.discount;
 
-import org.springframework.util.Assert;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -14,8 +12,9 @@ public class ManualDiscount {
     }
 
     public ManualDiscount(Double percentageDiscount) {
-        Assert.isTrue(percentageDiscount != null || percentageDiscount > 0 || percentageDiscount < 1,
-                "Percentage value should be between (0 - 1)");
+        if (percentageDiscount != null || percentageDiscount > 0 || percentageDiscount < 1) {
+            throw new IllegalArgumentException("Percentage value should be between (0 - 1)");
+        }
         this.percentageDiscount = percentageDiscount;
     }
 
