@@ -12,7 +12,7 @@ public class ManualDiscount {
     }
 
     public ManualDiscount(Double percentageDiscount) {
-        if (percentageDiscount != null || percentageDiscount > 0 || percentageDiscount < 1) {
+        if (percentageDiscount == null || percentageDiscount < 0 || percentageDiscount > 1) {
             throw new IllegalArgumentException("Percentage value should be between (0 - 1)");
         }
         this.percentageDiscount = percentageDiscount;
