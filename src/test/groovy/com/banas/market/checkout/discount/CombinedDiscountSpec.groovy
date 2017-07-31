@@ -4,7 +4,7 @@ import com.banas.market.checkout.inventory.Item
 import spock.lang.Shared
 import spock.lang.Specification
 
-class CombinedDiscountTest extends Specification {
+class CombinedDiscountSpec extends Specification {
     @Shared
     def itemA = new Item(id: 1, name: "A", barcode: "1")
     @Shared
