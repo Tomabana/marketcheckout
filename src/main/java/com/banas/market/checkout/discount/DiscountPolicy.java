@@ -31,7 +31,9 @@ public class DiscountPolicy {
     private Set<QuantityDiscount> possibleQuantityDiscount = new CopyOnWriteArraySet<>();
 
     public void addNewDiscounts(@NonNull Receipt receipt) {
-        cachedPossibleDiscounts(receipt.getLastAddedItem());
+        if (receipt.getLastAddedItem() != null) {
+            cachedPossibleDiscounts(receipt.getLastAddedItem());
+        }
         Map<Item, Integer> items = receipt.getReceiptItemsWithNotAppliedDiscount();
         possibleCombinedDiscount.forEach(combinedDiscount -> {
             if (combinedDiscount.checkIfDiscountCanApply(items)) {
@@ -55,7 +57,8 @@ public class DiscountPolicy {
     private void addPercentageDiscount(Receipt receipt) {
         boolean totalPriceIsGreaterThanLowerLevelOfPercentageDiscount = receipt.getTotalPriceIncludingDiscounts()
                 .compareTo(PERCENTAGE_DISCOUNT_PRICE) == 1;
-        if (totalPriceIsGreaterThanLowerLevelOfPercentageDiscount && receipt.isPercentageDiscountApplied(PERCENTAGE_DISCOUNT)) {
+        if (totalPriceIsGreaterThanLowerLevelOfPercentageDiscount && !receipt.isPercentageDiscountApplied
+                (PERCENTAGE_DISCOUNT)) {
             receipt.addManualDiscount(PERCENTAGE_DISCOUNT);
         }
     }

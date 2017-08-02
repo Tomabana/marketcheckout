@@ -23,10 +23,6 @@ public class Checkout {
     private boolean paymentDone = false;
     private Receipt receipt;
 
-    public Checkout() {
-        LOGGER.info("Creating new checkout.");
-    }
-
     @Autowired
     private ReceiptRepository receiptRepository;
 
