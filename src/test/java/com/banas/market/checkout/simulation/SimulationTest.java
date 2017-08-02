@@ -12,8 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class SimulationTest {
 
-    public static final int NUMBER_OF_BASKETS = 10;
-    public static final int MAX_NUMBER_OF_ITEMS_IN_BASKET = 10;
+    private static final int NUMBER_OF_BASKETS = 10;
+    private static final int MAX_NUMBER_OF_ITEMS_IN_BASKET = 10;
 
     @Autowired
     private SimulationService simulationService;

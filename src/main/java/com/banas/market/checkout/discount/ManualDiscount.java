@@ -14,8 +14,8 @@ public class ManualDiscount {
     }
 
     public ManualDiscount(@NonNull Double percentageDiscount) {
-        if (percentageDiscount < 0 || percentageDiscount > 1) {
-            throw new IllegalArgumentException("Percentage value should be between (0 - 1)");
+        if (percentageDiscount <= 0 || percentageDiscount > 1) {
+            throw new IllegalArgumentException("Percentage value should be between <0 - 1)");
         }
         this.percentageDiscount = percentageDiscount;
     }
@@ -25,7 +25,7 @@ public class ManualDiscount {
         if (percentageDiscount != null) {
             discount = discount.add(basketTotalPrice.multiply(BigDecimal.valueOf(percentageDiscount)));
         } else if (amountDiscount != null) {
-            discount = discount.add(amountDiscount);
+            discount = amountDiscount.compareTo(basketTotalPrice) > 0 ? basketTotalPrice : amountDiscount;
         }
         return discount;
     }
