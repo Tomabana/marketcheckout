@@ -5,6 +5,7 @@ import com.banas.market.checkout.discount.DiscountPolicy;
 import com.banas.market.checkout.discount.ManualDiscount;
 import com.banas.market.checkout.discount.QuantityDiscount;
 import com.banas.market.checkout.inventory.Item;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +23,13 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "TOTAL_PRICE")
+    @Column(name = "TOTAL_PRICE", nullable = false)
     private BigDecimal totalPrice = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-    @Column(name = "TOTAL_DISCOUNT")
+    @Column(name = "TOTAL_DISCOUNT", nullable = false)
     private BigDecimal totalDiscount = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-    @Column(name = "TIMESTAMP")
+    @Column(name = "TIMESTAMP", nullable = false)
     private Date date = new Date();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "receipt", cascade = CascadeType.ALL)
@@ -56,7 +57,7 @@ public class Receipt {
         this.discountPolicy = discountPolicy;
     }
 
-    public void addItem(Item item) {
+    public void addItem(@NonNull Item item) {
         lastAddedItem = item;
         receiptItemsWithNotAppliedDiscount.putIfAbsent(item, 0);
         receiptItemsWithNotAppliedDiscount.compute(item, (key, value) -> value + 1);
@@ -66,7 +67,7 @@ public class Receipt {
         discountPolicy.addNewDiscounts(this);
     }
 
-    public void addCombinedDiscount(CombinedDiscount combinedDiscount) {
+    public void addCombinedDiscount(@NonNull CombinedDiscount combinedDiscount) {
         combinedDiscounts.add(combinedDiscount);
         totalDiscount = totalDiscount.add(combinedDiscount.getDiscount());
         for (Item item : combinedDiscount.getDiscountItems()) {
@@ -74,19 +75,19 @@ public class Receipt {
         }
     }
 
-    public void addQuantityDiscount(QuantityDiscount quantityDiscount) {
+    public void addQuantityDiscount(@NonNull QuantityDiscount quantityDiscount) {
         quantityDiscounts.add(quantityDiscount);
         totalDiscount = totalDiscount.add(quantityDiscount.getDiscount());
         receiptItemsWithNotAppliedDiscount.compute(quantityDiscount.getItem(),
                 (itemKey, quantity) -> quantity - quantityDiscount.getQuantity());
     }
 
-    public void addManualDiscount(ManualDiscount manualDiscount) {
+    public void addManualDiscount(@NonNull ManualDiscount manualDiscount) {
         manualDiscounts.add(manualDiscount);
         totalDiscount = totalDiscount.add(manualDiscount.getDiscount(totalPrice));
     }
 
-    public boolean isPercentageDiscountApplied(ManualDiscount manualDiscount) {
+    public boolean isPercentageDiscountApplied(@NonNull ManualDiscount manualDiscount) {
         return manualDiscounts.contains(manualDiscount);
     }
 

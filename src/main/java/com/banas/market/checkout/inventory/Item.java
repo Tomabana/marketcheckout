@@ -18,17 +18,19 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
     private Long id;
 
     @Getter
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Getter
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "BARCODE")
+    @Getter
+    @Column(name = "BARCODE", nullable = false)
     private String barcode;
 
     @Getter
@@ -38,9 +40,4 @@ public class Item {
     @Getter
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "discountItems")
     private Set<CombinedDiscount> combinedDiscounts;
-
-    //TODO remove
-    public Long getId() {
-        return id;
-    }
 }

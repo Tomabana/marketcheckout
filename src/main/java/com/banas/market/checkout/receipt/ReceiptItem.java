@@ -12,7 +12,7 @@ public class ReceiptItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "QUANTITY")
+    @Column(name = "QUANTITY", nullable = false)
     private Integer quantity;
 
     @OneToOne

@@ -19,15 +19,15 @@ public class CombinedDiscount {
     private Long id;
 
     @Getter
-    @Column(name = "DISCOUNT")
+    @Column(name = "DISCOUNT", nullable = false)
     private BigDecimal discount;
 
     @Getter
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable
             (name = "COMBINED_DISCOUNT_ITEM",
-                    joinColumns = @JoinColumn(name = "COMBINED_DISCOUNT_ID"),
-                    inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+                    joinColumns = @JoinColumn(name = "COMBINED_DISCOUNT_ID", nullable = false),
+                    inverseJoinColumns = @JoinColumn(name = "ITEM_ID", nullable = false))
     public Set<Item> discountItems;
 
     boolean checkIfDiscountCanApply(Map<Item, Integer> itemsInBasket) {

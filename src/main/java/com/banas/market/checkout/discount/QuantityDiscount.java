@@ -20,10 +20,10 @@ public class QuantityDiscount {
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
 
-    @Column(name = "QUANTITY")
+    @Column(name = "QUANTITY", nullable = false)
     private Integer quantity;
 
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
     public BigDecimal getDiscount() {

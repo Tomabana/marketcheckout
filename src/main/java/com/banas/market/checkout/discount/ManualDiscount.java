@@ -1,5 +1,7 @@
 package com.banas.market.checkout.discount;
 
+import lombok.NonNull;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -11,14 +13,14 @@ public class ManualDiscount {
         this.amountDiscount = amountDiscount;
     }
 
-    public ManualDiscount(Double percentageDiscount) {
-        if (percentageDiscount == null || percentageDiscount < 0 || percentageDiscount > 1) {
+    public ManualDiscount(@NonNull Double percentageDiscount) {
+        if (percentageDiscount < 0 || percentageDiscount > 1) {
             throw new IllegalArgumentException("Percentage value should be between (0 - 1)");
         }
         this.percentageDiscount = percentageDiscount;
     }
 
-    public BigDecimal getDiscount(BigDecimal basketTotalPrice) {
+    public BigDecimal getDiscount(@NonNull BigDecimal basketTotalPrice) {
         BigDecimal discount = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         if (percentageDiscount != null) {
             discount = discount.add(basketTotalPrice.multiply(BigDecimal.valueOf(percentageDiscount)));

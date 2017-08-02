@@ -3,6 +3,7 @@ package com.banas.market.checkout.discount;
 import com.banas.market.checkout.inventory.Item;
 import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class DiscountPolicy {
     private Set<CombinedDiscount> possibleCombinedDiscount = new CopyOnWriteArraySet<>();
     private Set<QuantityDiscount> possibleQuantityDiscount = new CopyOnWriteArraySet<>();
 
-    public void addNewDiscounts(Receipt receipt) {
+    public void addNewDiscounts(@NonNull Receipt receipt) {
         cachedPossibleDiscounts(receipt.getLastAddedItem());
         Map<Item, Integer> items = receipt.getReceiptItemsWithNotAppliedDiscount();
         possibleCombinedDiscount.forEach(combinedDiscount -> {
