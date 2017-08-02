@@ -48,7 +48,7 @@ public class Checkout {
         paymentDone = true;
     }
 
-    public Receipt printReceipt() {
+    public void printReceipt() {
         if (paymentDone) {
             LOGGER.info("Printing receipt.");
             receipt.print();
@@ -56,6 +56,5 @@ public class Checkout {
         } else {
             LOGGER.warn("The receipt is not paid. Client has to pay receipt before printing it out.");
         }
-        return receipt;
     }
 }
