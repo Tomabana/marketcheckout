@@ -5,7 +5,6 @@ import com.banas.market.checkout.inventory.ItemRepository;
 import com.banas.market.checkout.receipt.Receipt;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 @Service
-@Scope("prototype")
 public class DiscountPolicy {
 
     private static final BigDecimal PERCENTAGE_DISCOUNT_PRICE = new BigDecimal(600);

@@ -5,6 +5,7 @@ import com.banas.market.checkout.discount.DiscountPolicy;
 import com.banas.market.checkout.discount.ManualDiscount;
 import com.banas.market.checkout.discount.QuantityDiscount;
 import com.banas.market.checkout.inventory.Item;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "RECEIPT")
+@NoArgsConstructor
 public class Receipt {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Receipt.class);
