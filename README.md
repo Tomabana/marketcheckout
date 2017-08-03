@@ -63,3 +63,5 @@ and check pitest report in directory:
 ```
 target/pit-reports/
 ```
+
+![alt text](pitest_report.png "Pit test report")
